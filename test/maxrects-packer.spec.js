@@ -245,6 +245,6 @@ describe("misc functionalities", () => {
         expect(x.rot).toBe(false);
         x = packer.add(398, 98, {number: 1, allowRotation:false})
         expect(x.rot).toBe(false);
-        expect(x.bin).toBe(2)
+        expect(x.bin).toBe(1)
     })
 });

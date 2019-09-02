@@ -74,7 +74,7 @@ export class MaxRectsPacker<T extends IRectangle = Rectangle> {
             if (typeof args[0] !== 'object') throw new Error("MacrectsPacker.add(): Wrong parameters");
             const rect = args[0] as T;
             if (rect.width > this.width || rect.height > this.height) {
-                rect.bin = this.bins.push(new OversizedElementBin<T>(rect));
+                rect.bin = this.bins.push(new OversizedElementBin<T>(rect)) - 1;
             } else {
                 let added = this.bins.slice(this._currentBinIndex).find(bin => bin.add(rect) !== undefined);
                 
@@ -83,10 +83,10 @@ export class MaxRectsPacker<T extends IRectangle = Rectangle> {
                     let tag = (rect.data && rect.data.tag) ? rect.data.tag : rect.tag ? rect.tag : undefined;
                     if (this.options.tag && tag) bin.tag = tag;
                     bin.add(rect);
-                    rect.bin = this.bins.push(bin);
+                    rect.bin = this.bins.push(bin)-1;
                 }
                 else{
-                    rect.bin  = this.bins.indexOf(added) + 1
+                    rect.bin  = this.bins.indexOf(added)
                 }
 
             }
@@ -101,17 +101,17 @@ export class MaxRectsPacker<T extends IRectangle = Rectangle> {
             } 
 
             if (rect.width > this.width || rect.height > this.height) {
-                rect.bin = this.bins.push(new OversizedElementBin<T>(rect as T));
+                rect.bin = this.bins.push(new OversizedElementBin<T>(rect as T)) -1;
             } else {
                 let added = this.bins.slice(this._currentBinIndex).find(bin => bin.add(rect as T) !== undefined);
                 if (!added) {
                     let bin = new MaxRectsBin<T>(this.width, this.height, this.padding, this.options);
                     if (this.options.tag && rect.data.tag) bin.tag = rect.data.tag;
                     bin.add(rect as T);
-                    rect.bin = this.bins.push(bin);
+                    rect.bin = this.bins.push(bin) - 1;
                 }
                 else{
-                    rect.bin  = this.bins.indexOf(added) + 1
+                    rect.bin  = this.bins.indexOf(added)
                 }
             }
             return rect as T;
