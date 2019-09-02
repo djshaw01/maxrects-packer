@@ -3,6 +3,8 @@ export interface IRectangle {
     height: number;
     x: number;
     y: number;
+    allowRotation?:boolean
+    bin?: number
     [propName: string]: any;
 }
 
@@ -24,6 +26,7 @@ export class Rectangle implements IRectangle {
      * @param {number} [y=0]
      * @param {boolean} [allowRotation=true]
      * @param {boolean} [rot=false]
+     * @param {number} [bin=-1]
      * @memberof Rectangle
      */
     constructor (
@@ -32,7 +35,8 @@ export class Rectangle implements IRectangle {
         x: number = 0,
         y: number = 0,
         allowRotation: boolean = true,
-        rot: boolean = false
+        rot: boolean = false,
+        bin: number = -1
     ) {
         this._width = width;
         this._height = height;
@@ -41,6 +45,7 @@ export class Rectangle implements IRectangle {
         this._y = y;
         this._data = {};
         this._rot = rot;
+        this._bin = bin;
     }
 
     /**
@@ -195,4 +200,12 @@ export class Rectangle implements IRectangle {
     protected _dirty: number = 0;
     get dirty (): boolean { return this._dirty > 0; }
     public setDirty (value: boolean = true): void { this._dirty = value ? this._dirty + 1 : 0; }
+
+    protected _bin: any;
+    get bin (): number { return this._bin; }
+    set bin (value: number) {
+        if (value === this._bin) return;
+        this._bin = value;
+        this._dirty ++;
+    }
 }

@@ -74,31 +74,44 @@ export class MaxRectsPacker<T extends IRectangle = Rectangle> {
             if (typeof args[0] !== 'object') throw new Error("MacrectsPacker.add(): Wrong parameters");
             const rect = args[0] as T;
             if (rect.width > this.width || rect.height > this.height) {
-                this.bins.push(new OversizedElementBin<T>(rect));
+                rect.bin = this.bins.push(new OversizedElementBin<T>(rect));
             } else {
                 let added = this.bins.slice(this._currentBinIndex).find(bin => bin.add(rect) !== undefined);
+                
                 if (!added) {
                     let bin = new MaxRectsBin<T>(this.width, this.height, this.padding, this.options);
                     let tag = (rect.data && rect.data.tag) ? rect.data.tag : rect.tag ? rect.tag : undefined;
                     if (this.options.tag && tag) bin.tag = tag;
                     bin.add(rect);
-                    this.bins.push(bin);
+                    rect.bin = this.bins.push(bin);
                 }
+                else{
+                    rect.bin  = this.bins.indexOf(added) + 1
+                }
+
             }
             return rect;
         } else {
             const rect: IRectangle = new Rectangle(args[0], args[1]);
-            if (args.length > 2) rect.data = args[2];
+            if (args.length > 2){
+                let {allowRotation,...rest} = args[2]
+                rect.data = rest;
+                if(allowRotation!== undefined)
+                    rect.allowRotation = allowRotation
+            } 
 
             if (rect.width > this.width || rect.height > this.height) {
-                this.bins.push(new OversizedElementBin<T>(rect as T));
+                rect.bin = this.bins.push(new OversizedElementBin<T>(rect as T));
             } else {
                 let added = this.bins.slice(this._currentBinIndex).find(bin => bin.add(rect as T) !== undefined);
                 if (!added) {
                     let bin = new MaxRectsBin<T>(this.width, this.height, this.padding, this.options);
                     if (this.options.tag && rect.data.tag) bin.tag = rect.data.tag;
                     bin.add(rect as T);
-                    this.bins.push(bin);
+                    rect.bin = this.bins.push(bin);
+                }
+                else{
+                    rect.bin  = this.bins.indexOf(added) + 1
                 }
             }
             return rect as T;

@@ -231,7 +231,20 @@ describe("misc functionalities", () => {
         packer.add(398, 98, {number: 1});
         let x = packer.add(398, 98, {number: 1});
         expect(x.rot).toBe(false);
+        x = packer.add(398, 98, {number: 1, allowRotation:true})
+        expect(x.rot).toBe(false);
+    })
+
+    test("do not allow shape to be rotated, test bin number", () => {
+        packer = new MaxRectsPacker(500, 500, 1, {...opt, ...{allowRotation:true}});
+        packer.add(398, 98, {number: 1});
+        packer.add(398, 98, {number: 1});
+        packer.add(398, 98, {number: 1});
+        packer.add(398, 98, {number: 1});
+        let x = packer.add(398, 98, {number: 1, allowRotation:false})
+        expect(x.rot).toBe(false);
         x = packer.add(398, 98, {number: 1, allowRotation:false})
         expect(x.rot).toBe(false);
+        expect(x.bin).toBe(2)
     })
 });
