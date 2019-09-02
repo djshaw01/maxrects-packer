@@ -14,6 +14,7 @@ export const EDGE_MIN_VALUE: number = 128;
  * @property {boolean} options.allowRotation allow rotation packing (default is false)
  * @property {boolean} options.tag allow auto grouping based on `rect.tag` (default is false)
  * @property {boolean} options.border atlas edge spacing (default is 0)
+ * 
  * @export
  * @interface Option
  */

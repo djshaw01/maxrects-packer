@@ -66,6 +66,25 @@ describe("Rectangle", () => {
         expect(rect.height).toBe(256);
         expect(rect.dirty).toBe(true);
     });
+    test("Rot flag functionality do not allow", () => {
+        const rect = new Rectangle(512, 256,null,null,false);
+        expect(rect.rot).toBe(false);
+        rect.rot = true;
+        expect(rect.rot).toBe(false);
+        expect(rect.width).toBe(512);
+        expect(rect.height).toBe(256);
+        expect(rect.dirty).toBe(false);
+        rect.setDirty(false);
+        rect.rot = true;
+        expect(rect.width).toBe(512);
+        expect(rect.height).toBe(256);
+        expect(rect.dirty).toBe(false);
+        rect.rot = false;
+        expect(rect.rot).toBe(false);
+        expect(rect.width).toBe(512);
+        expect(rect.height).toBe(256);
+        expect(rect.dirty).toBe(false);
+    });
 
     test("method: area()", () => {
         const rect = new Rectangle(16, 16);

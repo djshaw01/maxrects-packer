@@ -22,6 +22,7 @@ export class Rectangle implements IRectangle {
      * @param {number} [height=0]
      * @param {number} [x=0]
      * @param {number} [y=0]
+     * @param {boolean} [allowRotation=true]
      * @param {boolean} [rot=false]
      * @memberof Rectangle
      */
@@ -30,10 +31,12 @@ export class Rectangle implements IRectangle {
         height: number = 0,
         x: number = 0,
         y: number = 0,
+        allowRotation: boolean = true,
         rot: boolean = false
     ) {
         this._width = width;
         this._height = height;
+        this._allowRotation = allowRotation;
         this._x = x;
         this._y = y;
         this._data = {};
@@ -148,7 +151,7 @@ export class Rectangle implements IRectangle {
      * @memberof Rectangle
      */
     set rot (value: boolean) {
-        if (this._rot !== value) {
+        if (this._rot !== value && this.allowRotation) {
             const tmp = this.width;
             this.width = this.height;
             this.height = tmp;
@@ -156,6 +159,30 @@ export class Rectangle implements IRectangle {
             this._dirty ++;
         }
     }
+    
+    protected _allowRotation: boolean = false;
+
+    /**
+     * If the rectangle is rotated
+     *
+     * @type {boolean}
+     * @memberof Rectangle
+     */
+    get allowRotation (): boolean { return this._allowRotation; }
+
+    /**
+     * Set the rotate tag of the rectangle.
+     *
+     * note: after `rot` is set, `width/height` of this rectangle is swaped.
+     *
+     * @memberof Rectangle
+     */
+    set allowRotation (value: boolean) {
+        if (this._allowRotation !== value) {
+            this._allowRotation = value;
+            this._dirty ++;
+        }
+    }    
 
     protected _data: any;
     get data (): any { return this._data; }

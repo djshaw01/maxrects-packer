@@ -109,7 +109,7 @@ export class MaxRectsBin<T extends IRectangle = Rectangle> extends Bin<T> {
         let tag = (rect.data && rect.data.tag) ? rect.data.tag : rect.tag ? rect.tag : undefined;
         if (this.options.tag && this.tag !== tag) return undefined;
 
-        let node: Rectangle | undefined = this.findNode(rect.width + this.padding, rect.height + this.padding);
+        let node: Rectangle | undefined = this.findNode(rect.width + this.padding, rect.height + this.padding, rect.allowRotation);
         if (node) {
             this.updateBinSize(node);
             let numRectToProcess = this.freeRects.length;
@@ -153,7 +153,7 @@ export class MaxRectsBin<T extends IRectangle = Rectangle> extends Bin<T> {
         return undefined;
     }
 
-    private findNode (width: number, height: number): Rectangle | undefined {
+    private findNode (width: number, height: number, allowRotation:boolean = true): Rectangle | undefined {
         let score: number = Number.MAX_VALUE;
         let areaFit: number;
         let r: Rectangle;
@@ -169,10 +169,10 @@ export class MaxRectsBin<T extends IRectangle = Rectangle> extends Bin<T> {
             }
             if (!this.options.allowRotation) continue;
             // Continue to test 90-degree rotated rectangle
-            if (r.width >= height && r.height >= width) {
+            if (r.width >= height && r.height >= width && allowRotation) {
                 areaFit = Math.min(r.height - width, r.width - height);
                 if (areaFit < score) {
-                    bestNode = new Rectangle(height, width, r.x, r.y, true); // Rotated node
+                    bestNode = new Rectangle(height, width, r.x, r.y, true, allowRotation); // Rotated node
                     score = areaFit;
                 }
             }
